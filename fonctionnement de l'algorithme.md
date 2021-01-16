@@ -36,3 +36,24 @@ Pour chaque morceau de chemin, la dernière contrainte matchant (avec filtre sur
 A partir de cette direction
 Verification de la cohérence : les polygones inclus sont "discard"
 */
+
+
+
+
+Première étape : la formation des tranches : le stl contient uniquement des triangles, décrivant la surface d'un objet.
+
+On commence par en réaliser la projection.
+On fait un tableau de X couches, en fonction de l'épaisseur de couches demandées.
+On prend le sommet le plus haut et le sommet le plus bas. Ca nous donne l'intervalle des couches dans lesquelles on va mettre ce triangle.
+
+Ensuite on itère sur les couches. chaque triangle a donc une (projection) intersection (!) non vide sur cette couche.
+Pour la calculer, c'est très simple :
+On réalise une disjonction de cas :
+Les 3 vertex ont un z égal au z de la couche courante (pour chaque couche on ne considère pas l'intrballe mais le z moyen).
+Dans ce cas, le triangle (éventuellement plat) est inclus dans le plan. Etant donné que les volumes doivent former un intérieur, chaque côté a forcément un autre triangle adjacent. (De plus, chaque sommet de ce triangle a au total (incluant le triangle en cours de traitement) au minimum 3 triangles qui en partent)
+Autrement dit, le triangle sera forcément doublé. Il est donc inutile (voir même nuisible selon la suite de l'algorithme), de le conter.
+On passe au triangle suivant
+2 vertex ont la propriété ci dessus
+Dans ce, la projection est le segment dont les deux vertex sont l'extrémité
+1 vertex a la propriété ci dessus
+  Nouvelle disjonction de cas : si les deux autres
